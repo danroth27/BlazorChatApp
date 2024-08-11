@@ -1,0 +1,53 @@
+﻿@page "/"
+@using Microsoft.SemanticKernel
+@using Microsoft.SemanticKernel.ChatCompletion
+@using Microsoft.SemanticKernel.Connectors.OpenAI
+@rendermode InteractiveServer
+@inject Kernel Kernel
+@inject IChatCompletionService ChatService
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Send Message</h5>
+        <div class="form-group">
+            <label for="message">Message:</label>
+            <textarea class="form-control" id="message" @bind="@message"></textarea>
+        </div>
+        <button class="btn btn-primary mt-2" @onclick="Send">Send</button>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Response</h5>
+        <p>@response</p>
+    </div>
+</div>
+
+@code {
+    private string message;
+    private string response;
+    ChatHistory chat = new(@"You're a helpful chat assistant demonstrating the capabilities of Azure OpenAI in a Blazor app.
+If asked to do something dangerous or hostile, you should suggest playing a nice game of chess instead.
+When requested, you can change the theme colors of the app using CSS colors.");
+
+    private async Task Send()
+    {
+        chat.AddUserMessage(message);
+        response = "";
+        OpenAIPromptExecutionSettings settings = new() { ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions };
+        var chunks = ChatService.GetStreamingChatMessageContentsAsync(chat, settings, Kernel);
+        await foreach (var chunk in chunks)
+        {
+            response += chunk;
+            StateHasChanged();
+        }
+        chat.AddAssistantMessage(response);
+    }
+}
