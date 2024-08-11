@@ -13,10 +13,12 @@ This is a simple AI-powered Blazor chat app that uses [Semantic Kernel](https://
 ```json
 {
   "SmartComponents": {
-    "DeploymentName": <Azure OpenAI deployment name>,
-    "Endpoint": <Azure OpenAI endpoint URL>
+    "DeploymentName": "<Azure OpenAI deployment name>",
+    "Endpoint": "<Azure OpenAI endpoint URL>"
   }
 }
 ```
 
 1. Run the app and start chatting with the AI assistant. Try asking the AI assistant to change the theme colors of the app.
+
+![Blazor chat app screenshot](https://github.com/user-attachments/assets/a783b26c-433c-43e8-9e4d-84e5c8f60cb8)
